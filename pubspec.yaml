@@ -15,6 +15,7 @@ dependencies:
   cloud_firestore: ^5.6.0
   firebase_messaging: ^15.2.0
   flutter_secure_storage: ^9.2.0
+  gal: ^2.3.3
 
 dev_dependencies:
   flutter_test:

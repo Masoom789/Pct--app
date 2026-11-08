@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Internet: Firebase (Auth, Firestore, FCM). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Push notifications (Android 13+ runtime permission; requested in-app). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:label="PAK Cyber Team"
         android:name="${applicationName}"
