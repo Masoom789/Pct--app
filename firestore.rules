@@ -1,16 +1,47 @@
 rules_version = '2';
 
-// PAK Cyber Team app — Firestore security rules (Phase 1).
+// PAK Cyber Team app — Firestore security rules (Phase 3).
 // Users can only read/write their OWN user document.
-// Admins are managed separately (admin app, Phase 4).
+// Public content (ctfs, courses, rooms, leaderboard) is read-only for
+// any signed-in user; writes are admin-only (admin app, Phase 4).
+// Certificates are issued by the admin; each user reads only their
+// own (userId == their uid).
+// Progress (modules/challenges solved) is stored on-device only in
+// Phase 2, so it needs no rules here.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-    // Everything else is closed in Phase 1. Phase 2 opens
-    // read-only collections (ctfs, courses, rooms) with
-    // public reads and admin-only writes.
+    match /ctfs/{ctfId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /courses/{courseId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+      match /modules/{moduleId} {
+        allow read: if request.auth != null;
+        allow write: if false;
+      }
+    }
+    match /rooms/{roomId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+      match /challenges/{challengeId} {
+        allow read: if request.auth != null;
+        allow write: if false;
+      }
+    }
+    match /leaderboard/{entryId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /certificates/{certId} {
+      allow read: if request.auth != null
+        && request.auth.uid == resource.data.userId;
+      allow write: if false;
+    }
     match /{document=**} {
       allow read, write: if false;
     }
