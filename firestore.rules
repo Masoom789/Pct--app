@@ -1,0 +1,18 @@
+rules_version = '2';
+
+// PAK Cyber Team app — Firestore security rules (Phase 1).
+// Users can only read/write their OWN user document.
+// Admins are managed separately (admin app, Phase 4).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    // Everything else is closed in Phase 1. Phase 2 opens
+    // read-only collections (ctfs, courses, rooms) with
+    // public reads and admin-only writes.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
