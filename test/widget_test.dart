@@ -39,6 +39,25 @@ void main() {
     expect(find.text('Firebase is not connected yet'), findsOneWidget);
   });
 
+  testWidgets('Rooms screen can start on the Labs filter (drawer entry)',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: PctTheme.dark(),
+        home: const RoomsScreen(startWithLabs: true),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final labsChip = tester.widget<ChoiceChip>(
+      find.widgetWithText(ChoiceChip, 'Labs'),
+    );
+    expect(labsChip.selected, isTrue);
+    final allChip = tester.widget<ChoiceChip>(
+      find.widgetWithText(ChoiceChip, 'All'),
+    );
+    expect(allChip.selected, isFalse);
+  });
+
   testWidgets('Leaderboard screen explains Firebase is not connected',
       (WidgetTester tester) async {
     await tester.pumpWidget(

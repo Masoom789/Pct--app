@@ -9,7 +9,11 @@ import 'room_detail_screen.dart';
 /// `isLab: true` marks a lab. Filter chips switch between all,
 /// rooms only and labs only.
 class RoomsScreen extends StatefulWidget {
-  const RoomsScreen({super.key});
+  const RoomsScreen({super.key, this.startWithLabs = false});
+
+  /// When true, the list opens with the Labs filter already selected
+  /// (used by the app drawer's Labs entry).
+  final bool startWithLabs;
 
   @override
   State<RoomsScreen> createState() => _RoomsScreenState();
@@ -19,11 +23,12 @@ enum _RoomFilter { all, rooms, labs }
 
 class _RoomsScreenState extends State<RoomsScreen> {
   late Future<DataResult<List<Room>>> _future;
-  _RoomFilter _filter = _RoomFilter.all;
+  late _RoomFilter _filter;
 
   @override
   void initState() {
     super.initState();
+    _filter = widget.startWithLabs ? _RoomFilter.labs : _RoomFilter.all;
     _future = DataService.instance.fetchRooms();
   }
 
